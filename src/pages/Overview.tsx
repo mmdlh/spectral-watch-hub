@@ -62,8 +62,8 @@ const Overview = () => {
       <div className="grid grid-cols-12 gap-4">
         {/* 左侧：安全评分中心 */}
         <GlassCard className="col-span-4 flex flex-col items-center justify-center py-8" flowBorder>
-          <div className="text-xs uppercase tracking-widest text-muted-foreground mb-2">综合安全评分</div>
-          <div className="text-7xl font-display font-black stat-value mb-2">87</div>
+          <div className="text-sm uppercase tracking-widest text-muted-foreground mb-3">综合安全评分</div>
+          <div className="text-8xl font-display font-black stat-value mb-3">87</div>
           <div className="flex gap-4 mt-2">
             <StatusIndicator status="online" label="防火墙" />
             <StatusIndicator status="online" label="IDS" />
