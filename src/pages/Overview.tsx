@@ -44,9 +44,7 @@ const Overview = () => {
     },
     series: [{
       type: "radar",
-      data: [
-        { value: [85, 90, 72, 68, 88, 95], name: "安全评分", areaStyle: { opacity: 0.2 } },
-      ],
+      data: [{ value: [85, 90, 72, 68, 88, 95], name: "安全评分", areaStyle: { opacity: 0.2 } }],
     }],
   };
 
@@ -60,47 +58,54 @@ const Overview = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="font-display text-2xl font-bold tracking-wider glow-text text-primary">安全态势总览</h2>
-          <p className="text-muted-foreground text-sm mt-1">实时监控网络安全状态 · 最后更新：2024-03-15 14:35:22</p>
-        </div>
-        <div className="flex gap-4">
-          <StatusIndicator status="online" label="防火墙运行中" />
-          <StatusIndicator status="online" label="IDS正常" />
-          <StatusIndicator status="warning" label="WAF告警" />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-4 gap-4">
-        <StatCard title="今日攻击总数" value="2,847" icon={AlertTriangle} trend={{ value: 12.5, up: true }} color="from-cyber-red to-cyber-orange" />
-        <StatCard title="成功拦截" value="2,791" icon={Shield} trend={{ value: 8.3, up: true }} color="from-cyber-cyan to-cyber-blue" />
-        <StatCard title="活跃漏洞" value="156" icon={Bug} trend={{ value: 3.2, up: false }} color="from-cyber-purple to-cyber-pink" />
-        <StatCard title="在线设备" value="1,284" icon={Server} trend={{ value: 1.5, up: true }} color="from-cyber-green to-cyber-cyan" />
-      </div>
-
-      <div className="grid grid-cols-3 gap-4">
-        <GlassCard className="col-span-2">
-          <h3 className="font-display text-sm font-semibold tracking-wider text-foreground mb-2">24小时威胁趋势</h3>
-          <CyberChart option={threatTrend} height="280px" />
+      {/* 顶部：安全评分大卡 + 状态 + 统计 */}
+      <div className="grid grid-cols-12 gap-4">
+        {/* 左侧：安全评分中心 */}
+        <GlassCard className="col-span-4 flex flex-col items-center justify-center py-8" flowBorder>
+          <div className="text-xs uppercase tracking-widest text-muted-foreground mb-2">综合安全评分</div>
+          <div className="text-7xl font-display font-black stat-value mb-2">87</div>
+          <div className="flex gap-4 mt-2">
+            <StatusIndicator status="online" label="防火墙" />
+            <StatusIndicator status="online" label="IDS" />
+            <StatusIndicator status="warning" label="WAF" />
+          </div>
         </GlassCard>
-        <GlassCard>
-          <h3 className="font-display text-sm font-semibold tracking-wider text-foreground mb-2">安全评分</h3>
-          <CyberChart option={radarOption} height="280px" />
-        </GlassCard>
+
+        {/* 右侧：统计卡片 2x2 */}
+        <div className="col-span-8 grid grid-cols-2 grid-rows-2 gap-4">
+          <StatCard title="今日攻击总数" value="2,847" icon={AlertTriangle} trend={{ value: 12.5, up: true }} color="from-cyber-red to-cyber-orange" />
+          <StatCard title="成功拦截" value="2,791" icon={Shield} trend={{ value: 8.3, up: true }} color="from-cyber-cyan to-cyber-blue" />
+          <StatCard title="活跃漏洞" value="156" icon={Bug} trend={{ value: 3.2, up: false }} color="from-cyber-purple to-cyber-pink" />
+          <StatCard title="在线设备" value="1,284" icon={Server} trend={{ value: 1.5, up: true }} color="from-cyber-green to-cyber-cyan" />
+        </div>
       </div>
 
-      <div className="grid grid-cols-5 gap-4">
-        <GlassCard className="col-span-2">
-          <h3 className="font-display text-sm font-semibold tracking-wider text-foreground mb-2">攻击类型分布</h3>
-          <CyberChart option={attackTypes} height="260px" />
+      {/* 中部：趋势大图 */}
+      <GlassCard>
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="font-display text-sm font-semibold tracking-wider text-foreground">24小时威胁趋势</h3>
+          <span className="text-xs text-muted-foreground">最后更新：2024-03-15 14:35:22</span>
+        </div>
+        <CyberChart option={threatTrend} height="260px" />
+      </GlassCard>
+
+      {/* 下部：三栏 */}
+      <div className="grid grid-cols-12 gap-4">
+        <GlassCard className="col-span-3">
+          <h3 className="font-display text-sm font-semibold tracking-wider text-foreground mb-2">安全雷达</h3>
+          <CyberChart option={radarOption} height="240px" />
         </GlassCard>
         <GlassCard className="col-span-3">
+          <h3 className="font-display text-sm font-semibold tracking-wider text-foreground mb-2">攻击类型</h3>
+          <CyberChart option={attackTypes} height="240px" />
+        </GlassCard>
+        <GlassCard className="col-span-6">
           <h3 className="font-display text-sm font-semibold tracking-wider text-foreground mb-4">最新安全事件</h3>
           <DataTable columns={["时间", "来源IP", "事件类型", "风险等级", "状态"]} data={recentAlerts} />
         </GlassCard>
       </div>
 
+      {/* 底部快捷信息条 */}
       <div className="grid grid-cols-4 gap-4">
         {[
           { icon: Globe, label: "全球威胁情报", value: "12,847", sub: "来自156个国家" },
