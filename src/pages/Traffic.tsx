@@ -57,19 +57,19 @@ const Traffic = () => {
     <div className="space-y-6">
       <h2 className="font-display text-2xl font-bold tracking-wider glow-text text-primary">流量分析中心</h2>
 
-      {/* 全宽大趋势图 + 右侧统计叠放 */}
-      <div className="grid grid-cols-12 gap-4">
-        <GlassCard className="col-span-9">
-          <h3 className="font-display text-sm font-semibold tracking-wider text-foreground mb-2">24小时带宽趋势</h3>
-          <CyberChart option={bandwidthChart} height="240px" />
-        </GlassCard>
-        <div className="col-span-3 flex flex-col gap-4">
-          <StatCard title="实时带宽" value="582 Mbps" icon={Network} color="from-cyber-cyan to-cyber-blue" />
-          <StatCard title="今日总流量" value="847 GB" icon={ArrowUpDown} trend={{ value: 5.2, up: true }} color="from-cyber-green to-cyber-cyan" />
-          <StatCard title="活跃连接" value="12,847" icon={Wifi} trend={{ value: 3.1, up: true }} color="from-cyber-purple to-cyber-pink" />
-          <StatCard title="异常连接" value="23" icon={Globe} trend={{ value: 12, up: true }} color="from-cyber-red to-cyber-orange" />
-        </div>
+      {/* 统计卡片横排 */}
+      <div className="grid grid-cols-4 gap-4">
+        <StatCard title="实时带宽" value="582 Mbps" icon={Network} color="from-cyber-cyan to-cyber-blue" />
+        <StatCard title="今日总流量" value="847 GB" icon={ArrowUpDown} trend={{ value: 5.2, up: true }} color="from-cyber-green to-cyber-cyan" />
+        <StatCard title="活跃连接" value="12,847" icon={Wifi} trend={{ value: 3.1, up: true }} color="from-cyber-purple to-cyber-pink" />
+        <StatCard title="异常连接" value="23" icon={Globe} trend={{ value: 12, up: true }} color="from-cyber-red to-cyber-orange" />
       </div>
+
+      {/* 全宽大趋势图 */}
+      <GlassCard>
+        <h3 className="font-display text-sm font-semibold tracking-wider text-foreground mb-2">24小时带宽趋势</h3>
+        <CyberChart option={bandwidthChart} height="260px" />
+      </GlassCard>
 
       {/* Bento Grid：三块不等分 */}
       <div className="grid grid-cols-12 gap-4">
