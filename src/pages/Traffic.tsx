@@ -8,6 +8,7 @@ const Traffic = () => {
     tooltip: { trigger: "axis" as const },
     legend: { data: ["入站流量", "出站流量"], top: 0 },
     xAxis: { type: "category" as const, data: Array.from({ length: 24 }, (_, i) => `${i}:00`), axisLine: { lineStyle: { color: "#1e3a5f" } } },
+    yAxis: { type: "value" as const, name: "Mbps", splitLine: { lineStyle: { color: "#1e3a5f33" } } },
     grid: { left: "2%", right: "2%", bottom: "3%", top: "12%", containLabel: true },
     series: [
       { name: "入站流量", type: "line", smooth: true, data: [320,302,301,334,390,330,320,420,500,480,450,520,580,620,590,540,480,420,380,350,330,310,290,300], areaStyle: { opacity: 0.15 }, lineStyle: { width: 2 } },
