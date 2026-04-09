@@ -61,7 +61,7 @@ const Traffic = () => {
       <div className="grid grid-cols-12 gap-4">
         <GlassCard className="col-span-9">
           <h3 className="font-display text-sm font-semibold tracking-wider text-foreground mb-2">24小时带宽趋势</h3>
-          <CyberChart option={bandwidthChart} height="300px" />
+          <CyberChart option={bandwidthChart} height="240px" />
         </GlassCard>
         <div className="col-span-3 flex flex-col gap-4">
           <StatCard title="实时带宽" value="582 Mbps" icon={Network} color="from-cyber-cyan to-cyber-blue" />
