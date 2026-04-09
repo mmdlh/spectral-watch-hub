@@ -1,7 +1,34 @@
 import { GlassCard, StatCard } from "@/components/cyber/GlassCard";
 import { CyberChart } from "@/components/cyber/CyberChart";
-import { DataTable } from "@/components/cyber/DataTable";
-import { Crosshair, ShieldAlert, Skull, Globe } from "lucide-react";
+import { Crosshair, ShieldAlert, Skull, Globe, AlertCircle } from "lucide-react";
+
+const threatFeed = [
+  { id: "TH-0892", name: "APT-29 变种攻击", level: "严重", scope: "192.168.1.0/24", status: "进行中", time: "14:32" },
+  { id: "TH-0891", name: "勒索软件传播", level: "高危", scope: "10.0.0.0/8", status: "已遏制", time: "14:28" },
+  { id: "TH-0890", name: "供应链攻击", level: "高危", scope: "172.16.0.0/16", status: "调查中", time: "14:15" },
+  { id: "TH-0889", name: "零日漏洞利用", level: "严重", scope: "全网", status: "修复中", time: "13:58" },
+  { id: "TH-0888", name: "内部威胁检测", level: "中危", scope: "10.0.1.0/24", status: "已关闭", time: "13:42" },
+  { id: "TH-0887", name: "钓鱼邮件攻击", level: "中危", scope: "邮件网关", status: "已拦截", time: "13:30" },
+  { id: "TH-0886", name: "C2通信检测", level: "高危", scope: "DMZ区域", status: "处理中", time: "13:15" },
+  { id: "TH-0885", name: "横向移动行为", level: "严重", scope: "内网全段", status: "调查中", time: "12:50" },
+];
+
+const levelColors: Record<string, string> = {
+  "严重": "text-cyber-pink border-cyber-pink/30 bg-cyber-pink/10",
+  "高危": "text-cyber-red border-cyber-red/30 bg-cyber-red/10",
+  "中危": "text-cyber-orange border-cyber-orange/30 bg-cyber-orange/10",
+  "低危": "text-cyber-green border-cyber-green/30 bg-cyber-green/10",
+};
+
+const statusColors: Record<string, string> = {
+  "进行中": "text-cyber-cyan",
+  "已遏制": "text-cyber-green",
+  "调查中": "text-cyber-orange",
+  "修复中": "text-cyber-blue",
+  "已关闭": "text-muted-foreground",
+  "已拦截": "text-cyber-green",
+  "处理中": "text-cyber-cyan",
+};
 
 const Threats = () => {
   const attackTimeline = {
@@ -44,15 +71,6 @@ const Threats = () => {
     ],
   };
 
-  const threatData = [
-    ["TH-2024-0892", "APT-29 变种攻击", "严重", "192.168.1.0/24", "进行中", "2024-03-15"],
-    ["TH-2024-0891", "勒索软件传播", "高危", "10.0.0.0/8", "已遏制", "2024-03-15"],
-    ["TH-2024-0890", "供应链攻击", "高危", "172.16.0.0/16", "调查中", "2024-03-14"],
-    ["TH-2024-0889", "零日漏洞利用", "严重", "全网", "修复中", "2024-03-14"],
-    ["TH-2024-0888", "内部威胁", "中危", "10.0.1.0/24", "已关闭", "2024-03-13"],
-    ["TH-2024-0887", "钓鱼邮件攻击", "中危", "邮件网关", "已拦截", "2024-03-13"],
-  ];
-
   return (
     <div className="space-y-6">
       <h2 className="font-display text-2xl font-bold tracking-wider glow-text text-primary">威胁监测中心</h2>
@@ -64,26 +82,54 @@ const Threats = () => {
         <StatCard title="威胁来源国" value="23" icon={Globe} color="from-cyber-blue to-cyber-purple" />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <GlassCard>
-          <h3 className="font-display text-sm font-semibold tracking-wider text-foreground mb-2">本周攻击类型统计</h3>
-          <CyberChart option={attackTimeline} height="300px" />
+      {/* 核心区域：左侧实时威胁Feed + 右侧图表堆叠 */}
+      <div className="grid grid-cols-12 gap-4">
+        {/* 左侧：实时威胁信息流 */}
+        <GlassCard className="col-span-5 !p-0 overflow-hidden">
+          <div className="px-5 pt-5 pb-3 border-b border-border/30 flex items-center justify-between">
+            <h3 className="font-display text-sm font-semibold tracking-wider text-foreground flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-cyber-red animate-pulse" />
+              实时威胁信息流
+            </h3>
+            <span className="text-xs text-muted-foreground">共 {threatFeed.length} 条</span>
+          </div>
+          <div className="divide-y divide-border/20 max-h-[520px] overflow-y-auto">
+            {threatFeed.map((t) => (
+              <div key={t.id} className="px-5 py-3.5 hover:bg-secondary/20 transition-colors cursor-pointer">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-xs text-muted-foreground font-mono">{t.id}</span>
+                  <span className="text-xs text-muted-foreground">{t.time}</span>
+                </div>
+                <div className="font-semibold text-sm text-foreground mb-2">{t.name}</div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className={`text-xs px-2 py-0.5 rounded border ${levelColors[t.level] || ""}`}>{t.level}</span>
+                  <span className="text-xs text-muted-foreground">影响：{t.scope}</span>
+                  <span className={`text-xs ml-auto font-medium ${statusColors[t.status] || ""}`}>
+                    <AlertCircle className="w-3 h-3 inline mr-1" />{t.status}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
         </GlassCard>
-        <GlassCard>
-          <h3 className="font-display text-sm font-semibold tracking-wider text-foreground mb-2">威胁等级趋势</h3>
-          <CyberChart option={severityLine} height="300px" />
-        </GlassCard>
-      </div>
 
-      <div className="grid grid-cols-3 gap-4">
-        <GlassCard>
-          <h3 className="font-display text-sm font-semibold tracking-wider text-foreground mb-2">攻击来源分布</h3>
-          <CyberChart option={geoOption} height="280px" />
-        </GlassCard>
-        <GlassCard className="col-span-2">
-          <h3 className="font-display text-sm font-semibold tracking-wider text-foreground mb-4">威胁情报列表</h3>
-          <DataTable columns={["编号", "威胁名称", "等级", "影响范围", "状态", "发现时间"]} data={threatData} />
-        </GlassCard>
+        {/* 右侧：图表垂直堆叠 */}
+        <div className="col-span-7 flex flex-col gap-4">
+          <GlassCard>
+            <h3 className="font-display text-sm font-semibold tracking-wider text-foreground mb-2">威胁等级趋势</h3>
+            <CyberChart option={severityLine} height="230px" />
+          </GlassCard>
+          <div className="grid grid-cols-2 gap-4">
+            <GlassCard>
+              <h3 className="font-display text-sm font-semibold tracking-wider text-foreground mb-2">本周攻击类型</h3>
+              <CyberChart option={attackTimeline} height="220px" />
+            </GlassCard>
+            <GlassCard>
+              <h3 className="font-display text-sm font-semibold tracking-wider text-foreground mb-2">攻击来源分布</h3>
+              <CyberChart option={geoOption} height="220px" />
+            </GlassCard>
+          </div>
+        </div>
       </div>
     </div>
   );

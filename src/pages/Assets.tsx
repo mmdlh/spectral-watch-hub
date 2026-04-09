@@ -1,7 +1,24 @@
 import { GlassCard, StatCard, StatusIndicator } from "@/components/cyber/GlassCard";
 import { CyberChart } from "@/components/cyber/CyberChart";
-import { DataTable } from "@/components/cyber/DataTable";
 import { Server, Monitor, HardDrive, Cpu } from "lucide-react";
+
+const assetItems = [
+  { name: "SRV-WEB-01", type: "Web服务器", os: "CentOS 8", ip: "192.168.1.10", cpu: 35, mem: 62, status: "online" as const, risk: "低" },
+  { name: "SRV-DB-01", type: "数据库", os: "Ubuntu 22", ip: "192.168.1.20", cpu: 78, mem: 85, status: "online" as const, risk: "中" },
+  { name: "FW-MAIN-01", type: "防火墙", os: "FortiOS", ip: "192.168.1.1", cpu: 22, mem: 45, status: "online" as const, risk: "低" },
+  { name: "SW-CORE-01", type: "核心交换机", os: "Cisco IOS", ip: "192.168.1.2", cpu: 18, mem: 38, status: "online" as const, risk: "低" },
+  { name: "SRV-APP-02", type: "应用服务器", os: "Windows 2022", ip: "192.168.1.30", cpu: 0, mem: 0, status: "offline" as const, risk: "高" },
+  { name: "IOT-CAM-05", type: "监控摄像头", os: "Linux ARM", ip: "192.168.2.50", cpu: 45, mem: 60, status: "online" as const, risk: "中" },
+  { name: "SRV-MAIL-01", type: "邮件服务器", os: "CentOS 7", ip: "192.168.1.40", cpu: 55, mem: 72, status: "warning" as const, risk: "中" },
+  { name: "LB-NGINX-01", type: "负载均衡", os: "Ubuntu 20", ip: "192.168.1.5", cpu: 28, mem: 42, status: "online" as const, risk: "低" },
+];
+
+const riskBorder: Record<string, string> = {
+  "低": "border-cyber-green/30",
+  "中": "border-cyber-orange/30",
+  "高": "border-cyber-red/30",
+};
+const riskText: Record<string, string> = { "低": "text-cyber-green", "中": "text-cyber-orange", "高": "text-cyber-red" };
 
 const Assets = () => {
   const assetCategory = {
@@ -38,22 +55,6 @@ const Assets = () => {
     }],
   };
 
-  const osDistribution = {
-    tooltip: { trigger: "axis" as const },
-    xAxis: { type: "category" as const, data: ["CentOS", "Ubuntu", "Windows", "Debian", "RHEL", "其他"], axisLine: { lineStyle: { color: "#1e3a5f" } } },
-    yAxis: { type: "value" as const, splitLine: { lineStyle: { color: "#1e3a5f33" } } },
-    series: [{ type: "bar", data: [280, 220, 180, 120, 95, 55], barWidth: "50%", itemStyle: { borderRadius: [4, 4, 0, 0] } }],
-  };
-
-  const assetTable = [
-    ["SRV-WEB-01", "Web服务器", "CentOS 8", "192.168.1.10", "在线", "低"],
-    ["SRV-DB-01", "数据库", "Ubuntu 22", "192.168.1.20", "在线", "中"],
-    ["FW-MAIN-01", "防火墙", "FortiOS", "192.168.1.1", "在线", "低"],
-    ["SW-CORE-01", "核心交换机", "Cisco IOS", "192.168.1.2", "在线", "低"],
-    ["SRV-APP-02", "应用服务器", "Windows 2022", "192.168.1.30", "离线", "高"],
-    ["IOT-CAM-05", "监控摄像头", "Linux ARM", "192.168.2.50", "在线", "中"],
-  ];
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -64,6 +65,7 @@ const Assets = () => {
         </div>
       </div>
 
+      {/* 顶部横条统计 */}
       <div className="grid grid-cols-4 gap-4">
         <StatCard title="资产总数" value="1,284" icon={Server} color="from-cyber-cyan to-cyber-blue" />
         <StatCard title="在线设备" value="1,180" icon={Monitor} trend={{ value: 2, up: true }} color="from-cyber-green to-cyber-cyan" />
@@ -71,25 +73,57 @@ const Assets = () => {
         <StatCard title="CPU均值" value="42%" icon={Cpu} color="from-cyber-orange to-cyber-red" />
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
+      {/* 中部：资产卡片目录 */}
+      <div className="grid grid-cols-4 gap-4">
+        {assetItems.map((a) => (
+          <div key={a.name} className={`glass-card p-4 border ${riskBorder[a.risk]}`}>
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <StatusIndicator status={a.status} label="" size="sm" />
+                <span className="font-display text-xs font-bold tracking-wider text-foreground">{a.name}</span>
+              </div>
+              <span className={`text-xs font-semibold ${riskText[a.risk]}`}>{a.risk}风险</span>
+            </div>
+            <div className="text-xs text-muted-foreground mb-3">{a.type} · {a.os}</div>
+            <div className="text-xs text-muted-foreground mb-3 font-mono">{a.ip}</div>
+            {a.status !== "offline" && (
+              <div className="space-y-2">
+                <div>
+                  <div className="flex justify-between text-xs text-muted-foreground mb-1">
+                    <span>CPU</span><span>{a.cpu}%</span>
+                  </div>
+                  <div className="h-1.5 rounded-full bg-secondary/50 overflow-hidden">
+                    <div className={`h-full rounded-full transition-all ${a.cpu > 70 ? "bg-gradient-to-r from-cyber-orange to-cyber-red" : "bg-gradient-to-r from-cyber-cyan to-cyber-blue"}`} style={{ width: `${a.cpu}%` }} />
+                  </div>
+                </div>
+                <div>
+                  <div className="flex justify-between text-xs text-muted-foreground mb-1">
+                    <span>内存</span><span>{a.mem}%</span>
+                  </div>
+                  <div className="h-1.5 rounded-full bg-secondary/50 overflow-hidden">
+                    <div className={`h-full rounded-full transition-all ${a.mem > 70 ? "bg-gradient-to-r from-cyber-orange to-cyber-red" : "bg-gradient-to-r from-cyber-purple to-cyber-blue"}`} style={{ width: `${a.mem}%` }} />
+                  </div>
+                </div>
+              </div>
+            )}
+            {a.status === "offline" && (
+              <div className="text-xs text-muted-foreground italic">设备离线</div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* 底部：两列图表 */}
+      <div className="grid grid-cols-2 gap-4">
         <GlassCard>
           <h3 className="font-display text-sm font-semibold tracking-wider text-foreground mb-2">资产分类</h3>
-          <CyberChart option={assetCategory} height="300px" />
+          <CyberChart option={assetCategory} height="280px" />
         </GlassCard>
         <GlassCard>
           <h3 className="font-display text-sm font-semibold tracking-wider text-foreground mb-2">资产健康度</h3>
-          <CyberChart option={assetHealth} height="300px" />
-        </GlassCard>
-        <GlassCard>
-          <h3 className="font-display text-sm font-semibold tracking-wider text-foreground mb-2">操作系统分布</h3>
-          <CyberChart option={osDistribution} height="300px" />
+          <CyberChart option={assetHealth} height="280px" />
         </GlassCard>
       </div>
-
-      <GlassCard>
-        <h3 className="font-display text-sm font-semibold tracking-wider text-foreground mb-4">资产清单</h3>
-        <DataTable columns={["资产编号", "类型", "操作系统", "IP地址", "状态", "风险"]} data={assetTable} />
-      </GlassCard>
     </div>
   );
 };
