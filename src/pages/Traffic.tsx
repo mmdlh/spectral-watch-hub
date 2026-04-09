@@ -9,6 +9,7 @@ const Traffic = () => {
     legend: { data: ["入站流量", "出站流量"], top: 0 },
     xAxis: { type: "category" as const, data: Array.from({ length: 24 }, (_, i) => `${i}:00`), axisLine: { lineStyle: { color: "#1e3a5f" } } },
     yAxis: { type: "value" as const, name: "Mbps", splitLine: { lineStyle: { color: "#1e3a5f33" } } },
+    grid: { left: "2%", right: "2%", bottom: "3%", top: "12%", containLabel: true },
     series: [
       { name: "入站流量", type: "line", smooth: true, data: [320,302,301,334,390,330,320,420,500,480,450,520,580,620,590,540,480,420,380,350,330,310,290,300], areaStyle: { opacity: 0.15 }, lineStyle: { width: 2 } },
       { name: "出站流量", type: "line", smooth: true, data: [220,182,191,234,290,230,220,320,400,380,350,420,480,520,490,440,380,320,280,250,230,210,190,200], areaStyle: { opacity: 0.15 }, lineStyle: { width: 2 } },
@@ -60,7 +61,7 @@ const Traffic = () => {
       <div className="grid grid-cols-12 gap-4">
         <GlassCard className="col-span-9">
           <h3 className="font-display text-sm font-semibold tracking-wider text-foreground mb-2">24小时带宽趋势</h3>
-          <CyberChart option={bandwidthChart} height="300px" />
+          <CyberChart option={bandwidthChart} height="240px" />
         </GlassCard>
         <div className="col-span-3 flex flex-col gap-4">
           <StatCard title="实时带宽" value="582 Mbps" icon={Network} color="from-cyber-cyan to-cyber-blue" />
