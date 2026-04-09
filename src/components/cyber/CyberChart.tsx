@@ -17,7 +17,7 @@ const gradientColors = [
 ];
 
 interface CyberChartProps {
-  option: EChartsOption;
+  option: Record<string, any>;
   height?: string;
   className?: string;
 }
