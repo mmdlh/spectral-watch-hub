@@ -101,7 +101,7 @@ export const CyberLayout = ({ children }: { children: ReactNode }) => {
         </div>
       </nav>
 
-      <main className="relative z-10 pt-18 pb-8 px-6">{children}</main>
+      <main className="relative z-10 pt-20 pb-8 px-6">{children}</main>
     </div>
   );
 };
