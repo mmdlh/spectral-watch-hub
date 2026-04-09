@@ -34,7 +34,7 @@ export const CyberLayout = ({ children }: { children: ReactNode }) => {
         <div className="flex items-center gap-3 mr-8">
           <Shield className="w-7 h-7 text-primary" />
           <h1 className="font-display text-lg font-bold tracking-widest glow-text text-primary">
-            CYBERGUARD
+            网络安全监控平台
           </h1>
         </div>
 
