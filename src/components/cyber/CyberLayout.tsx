@@ -33,7 +33,7 @@ export const CyberLayout = ({ children }: { children: ReactNode }) => {
       <nav className="glass-nav fixed top-0 left-0 right-0 z-50 h-16 flex items-center px-6">
         <div className="flex items-center gap-3 mr-8">
           <Shield className="w-7 h-7 text-primary" />
-          <h1 className="font-display text-lg font-bold tracking-widest glow-text text-primary">
+          <h1 className="font-display text-2xl font-black tracking-widest glow-text text-primary">
             网络安全监控平台
           </h1>
         </div>
